@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>hcmtranle-dashboard</title>
+    <title>tranle-hcm-dashboard</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome Icons -->
@@ -65,7 +65,7 @@
     <header class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 pb-4 border-b border-gray-200 gap-4">
         <div>
             <h1 class="text-2xl md:text-3xl font-bold text-gray-900 flex items-center gap-3">
-                <i class="fa-solid fa-gauge-high text-blue-600"></i> hcmtranle-dashboard
+                <i class="fa-solid fa-gauge-high text-blue-600"></i> tranle-hcm-dashboard
             </h1>
             <p class="text-sm text-gray-500 mt-1">
                 Tích hợp Dữ liệu sống: TradingView • Vietstock • CafeF • CoinGecko API
@@ -139,20 +139,34 @@
             <p class="text-[11px] text-gray-400 mt-1">Biểu đồ kỹ thuật thời gian thực từ TradingView. Thầy có thể gõ mã cổ phiếu VN (VD: VNINDEX, VNM, FPT) trực tiếp vào biểu đồ.</p>
         </div>
 
-        <!-- TAB 2: VIETSTOCK KHỐI NGOẠI NHÚNG TRỰC TIẾP -->
+        <!-- TAB 2: VIETSTOCK KHỐI NGOẠI (CỔNG LIÊN KẾT TRỰC TIẾP TỐI ƯU) -->
         <div id="live-content-vietstock" class="w-full hidden">
-            <div class="w-full h-[550px] border border-gray-200 rounded-lg overflow-hidden relative">
-                <iframe src="https://finance.vietstock.vn/giao-dich-nha-dau-tu-nuoc-ngoai" class="w-full h-full border-0"></iframe>
+            <div class="bg-gray-50 border border-gray-200 rounded-xl p-8 text-center flex flex-col items-center justify-center min-h-[350px]">
+                <div class="w-16 h-16 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-2xl mb-4">
+                    <i class="fa-solid fa-globe"></i>
+                </div>
+                <h3 class="text-lg font-bold text-gray-800 mb-2">Giao dịch Nhà đầu tư nước ngoài (Vietstock Finance)</h3>
+                <p class="text-sm text-gray-500 max-w-md mb-6">Trang Vietstock chặn nhúng trực tiếp để bảo mật. Thầy nhấp vào nút bên dưới để mở ngay cổng tra cứu dữ liệu Mua/Bán ròng thời gian thực chuẩn nhất từ Vietstock.</p>
+                <a href="https://finance.vietstock.vn/giao-dich-nha-dau-tu-nuoc-ngoai" target="_blank" class="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-medium px-6 py-3 rounded-lg shadow transition">
+                    <span>Mở dữ liệu Vietstock</span>
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                </a>
             </div>
-            <p class="text-[11px] text-gray-400 mt-2">Dữ liệu giao dịch Mua/Bán ròng của Nhà đầu tư nước ngoài tải trực tiếp từ Vietstock Finance.</p>
         </div>
 
-        <!-- TAB 3: CAFEF DỮ LIỆU NHÚNG TRỰC TIẾP -->
+        <!-- TAB 3: CAFEF DỮ LIỆU (CỔNG LIÊN KẾT TRỰC TIẾP TỐI ƯU) -->
         <div id="live-content-cafef" class="w-full hidden">
-            <div class="w-full h-[550px] border border-gray-200 rounded-lg overflow-hidden relative">
-                <iframe src="https://cafef.vn/du-lieu.chn" class="w-full h-full border-0"></iframe>
+            <div class="bg-gray-50 border border-gray-200 rounded-xl p-8 text-center flex flex-col items-center justify-center min-h-[350px]">
+                <div class="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center text-2xl mb-4">
+                    <i class="fa-solid fa-table"></i>
+                </div>
+                <h3 class="text-lg font-bold text-gray-800 mb-2">Bảng tổng hợp Dữ liệu Thị trường (CafeF Data)</h3>
+                <p class="text-sm text-gray-500 max-w-md mb-6">Trang CafeF chặn nhúng trực tiếp để bảo mật. Thầy nhấp vào nút bên dưới để truy cập nhanh bảng dữ liệu giao dịch, giá trần/sàn và thông tin doanh nghiệp từ CafeF.</p>
+                <a href="https://cafef.vn/du-lieu.chn" target="_blank" class="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-medium px-6 py-3 rounded-lg shadow transition">
+                    <span>Mở dữ liệu CafeF</span>
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                </a>
             </div>
-            <p class="text-[11px] text-gray-400 mt-2">Bảng tổng hợp dữ liệu giao dịch, giá, thị trường từ CafeF Data.</p>
         </div>
     </section>
 
