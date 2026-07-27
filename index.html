@@ -30,11 +30,11 @@ body { font-family: 'Inter', sans-serif; background-color: #f3f4f6; color: #1f29
 <i class="fa-solid fa-gauge-high text-blue-600"></i> tranle-hcm-dashboard
 </h1>
 <p class="text-sm text-gray-500 mt-1">
-Tích hợp Dữ liệu sống: TradingView | Vietstock | CafeF | CoinGecko API
+Hệ thống Quản trị cá nhân & Dữ liệu thời gian thực
 </p>
 </div>
 <div class="flex items-center gap-3 self-end md:self-center">
-<button onclick="fetchCryptoPrices()" class="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition">
+<button onclick="refreshAllData()" class="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition">
 <i class="fa-solid fa-rotate-right"></i> Làm mới dữ liệu
 </button>
 <div class="text-right text-xs text-gray-500 bg-white px-3 py-1.5 rounded-lg border border-gray-200">
@@ -49,7 +49,7 @@ Tích hợp Dữ liệu sống: TradingView | Vietstock | CafeF | CoinGecko API
 <i class="fa-solid fa-magnifying-glass text-blue-500"></i> Tìm kiếm nhanh (nguồn trực tuyến)
 </h2>
 <div class="flex flex-col md:flex-row gap-3">
-<input type="text" id="search-input" placeholder="VD: xu hướng AI mới nhất / ý tưởng video / VNINDEX..." class="flex-1 px-4 py-2.5 bg-gray-50 border border-gray-300 rounded-lg text-sm focus:outline-none focus:border-blue-500" onkeypress="if(event.key === 'Enter') triggerSearch('google')">
+<input type="text" id="search-input" placeholder="Nhập nội dung cần tra cứu..." class="flex-1 px-4 py-2.5 bg-gray-50 border border-gray-300 rounded-lg text-sm focus:outline-none focus:border-blue-500" onkeypress="if(event.key === 'Enter') triggerSearch('google')">
 <div class="grid grid-cols-2 sm:grid-cols-5 gap-2">
 <button onclick="triggerSearch('google')" class="flex items-center justify-center gap-2 px-4 py-2.5 bg-white border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50">
 <i class="fa-brands fa-google text-red-500"></i> Google
@@ -70,7 +70,7 @@ Tích hợp Dữ liệu sống: TradingView | Vietstock | CafeF | CoinGecko API
 </div>
 </section>
 
-<!-- GRID 4 CỘT: TRỢ LÝ, AI, YOUTUBE, BÀI BÁO (HIỂN THỊ PHÍA TRÊN) -->
+<!-- GRID 4 CỘT: TRỢ LÝ, AI, YOUTUBE, BÀI BÁO -->
 <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-4 gap-6 mb-6">
 <!-- BOX 1: TRỢ LÝ CÔ HƯƠNG -->
 <section class="card p-5 flex flex-col">
@@ -198,15 +198,28 @@ Streak: <strong id="streak-count" class="text-purple-700 text-sm">0 ngày</stron
 </section>
 </div>
 
-<!-- KHU VỰC DỮ LIỆU SỐNG TỪ TRADINGVIEW, VIETSTOCK, CAFEF (ĐƯỢC ĐƯA XUỐNG DƯỚI) -->
+<!-- MODULE TỔNG HỢP TIN TỨC TRỰC TUYẾN -->
+<section class="card p-5 mb-6">
+<div class="flex justify-between items-center mb-4">
+<h2 class="text-base font-semibold text-gray-800 flex items-center gap-2">
+<i class="fa-regular fa-newspaper text-blue-600"></i> Tổng hợp tin tức mới nhất
+</h2>
+<span class="text-xs text-gray-500">Nguồn: VnExpress RSS</span>
+</div>
+<div id="news-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+<p class="text-sm text-gray-500 italic col-span-3">Đang kết nối và tải tin tức thời sự...</p>
+</div>
+</section>
+
+<!-- KHU VỰC DỮ LIỆU SỐNG TỪ TRADINGVIEW, VIETSTOCK, CAFEF -->
 <section class="card p-5 mb-6">
 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 border-b border-gray-100 pb-3">
 <h2 class="text-base font-semibold text-gray-800 flex items-center gap-2">
 <i class="fa-solid fa-chart-column text-indigo-600"></i> Dữ liệu thị trường thời gian thực (Live Streams)
 </h2>
-<div class="flex gap-2">
+<div class="flex gap-2 mt-3 sm:mt-0">
 <button onclick="switchLiveTab('tradingview')" id="tab-tv" class="tab-btn active">
-<i class="fa-solid fa-chart-line"></i> TradingView (Biểu đồ Live)
+<i class="fa-solid fa-chart-line"></i> TradingView (Biểu đồ)
 </button>
 <button onclick="switchLiveTab('vietstock')" id="tab-vs" class="tab-btn">
 <i class="fa-solid fa-globe"></i> Vietstock (Khối ngoại)
@@ -222,7 +235,6 @@ Streak: <strong id="streak-count" class="text-purple-700 text-sm">0 ngày</stron
 <div class="tradingview-widget-container" style="height: 520px; width: 100%;">
 <div id="tradingview_chart" style="height: 500px; width: 100%;"></div>
 </div>
-<p class="text-[11px] text-gray-400 mt-1">Biểu đồ kỹ thuật thời gian thực từ TradingView. Thầy có thể thu phóng hoặc thêm chỉ báo tùy ý.</p>
 </div>
 
 <!-- TAB 2: VIETSTOCK KHỐI NGOẠI -->
@@ -232,7 +244,7 @@ Streak: <strong id="streak-count" class="text-purple-700 text-sm">0 ngày</stron
 <i class="fa-solid fa-globe"></i>
 </div>
 <h3 class="text-lg font-bold text-gray-800 mb-2">Giao dịch Nhà đầu tư nước ngoài (Vietstock)</h3>
-<p class="text-sm text-gray-500 max-w-md mb-6">Trang Vietstock chặn nhúng trực tiếp để bảo mật. Thầy nhấp vào nút bên dưới để truy cập nhanh biểu đồ dòng tiền cập nhật liên tục.</p>
+<p class="text-sm text-gray-500 max-w-md mb-6">Nhấp vào nút bên dưới để truy cập nhanh biểu đồ dòng tiền cập nhật liên tục.</p>
 <a href="https://finance.vietstock.vn/giao-dich-nha-dau-tu-nuoc-ngoai" target="_blank" class="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition">
 <span>Mở dữ liệu Vietstock</span>
 <i class="fa-solid fa-arrow-up-right-from-square"></i>
@@ -247,7 +259,7 @@ Streak: <strong id="streak-count" class="text-purple-700 text-sm">0 ngày</stron
 <i class="fa-solid fa-table"></i>
 </div>
 <h3 class="text-lg font-bold text-gray-800 mb-2">Bảng tổng hợp Dữ liệu Thị trường (CafeF Data)</h3>
-<p class="text-sm text-gray-500 max-w-md mb-6">Trang CafeF chặn nhúng trực tiếp để bảo mật. Thầy nhấp vào nút bên dưới để truy cập nhanh bảng dữ liệu giao dịch, giá trần/sàn và thông tin doanh nghiệp từ CafeF.</p>
+<p class="text-sm text-gray-500 max-w-md mb-6">Nhấp vào nút bên dưới để truy cập nhanh bảng dữ liệu giao dịch từ CafeF.</p>
 <a href="https://cafef.vn/du-lieu.chn" target="_blank" class="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-3 rounded-lg font-medium transition">
 <span>Mở dữ liệu CafeF</span>
 <i class="fa-solid fa-arrow-up-right-from-square"></i>
@@ -262,33 +274,56 @@ Streak: <strong id="streak-count" class="text-purple-700 text-sm">0 ngày</stron
 <h2 class="text-base font-semibold text-gray-800 flex items-center gap-2">
 <i class="fa-solid fa-coins text-amber-500"></i> Cảnh báo Coin (Live Real-time API)
 </h2>
-<button onclick="fetchCryptoPrices()" class="text-xs bg-amber-50 hover:bg-amber-100 text-amber-700 font-medium px-3 py-1.5 rounded border border-amber-200 flex items-center gap-2 transition">
-<i class="fa-solid fa-rotate-right"></i> Tải giá mới
-</button>
 </div>
-<p class="text-xs text-gray-500 mb-3">Nguồn giá trực tuyến: <strong>CoinGecko Live API</strong></p>
-<div class="overflow-x-auto">
+<div class="overflow-x-auto mt-3">
 <table class="w-full text-left border-collapse text-xs">
 <thead>
 <tr class="border-b border-gray-200 text-gray-500 bg-gray-50">
-<th class="p-2 font-medium">COIN</th>
+<th class="p-2 font-medium">MÃ TÀI SẢN</th>
 <th class="p-2 font-medium">GIÁ (USD)</th>
-<th class="p-2 font-medium">NGƯỠNG DƯỚI</th>
-<th class="p-2 font-medium">NGƯỠNG TRÊN</th>
-<th class="p-2 font-medium">TRẠNG THÁI</th>
+<th class="p-2 font-medium">TRẠNG THÁI KIỂM ĐỊNH</th>
 </tr>
 </thead>
 <tbody id="crypto-table-body">
-<!-- Render JS -->
 </tbody>
 </table>
 </div>
 </section>
 
-<!-- KỊCH BẢN JAVASCRIPT ĐIỀU KHIỂN -->
+<!-- KỊCH BẢN JAVASCRIPT ĐIỀU KHIỂN & LƯU TRỮ -->
 <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
 <script>
-// Khởi tạo TradingView
+// 1. Tải tin tức tự động thông qua RSS2JSON API
+async function fetchNews() {
+    const rssUrl = 'https://vnexpress.net/rss/tin-moi-nhat.rss';
+    const apiUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(rssUrl)}`;
+    try {
+        const response = await fetch(apiUrl);
+        const data = await response.json();
+        const container = document.getElementById('news-container');
+        
+        if (data.status === 'ok') {
+            container.innerHTML = '';
+            const articles = data.items.slice(0, 6);
+            articles.forEach(article => {
+                const dateObj = new Date(article.pubDate);
+                const timeString = dateObj.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }) + ' - ' + dateObj.toLocaleDateString('vi-VN');
+                
+                container.innerHTML += `
+                    <a href="${article.link}" target="_blank" class="block border border-gray-100 rounded-lg p-4 hover:bg-blue-50 transition shadow-sm">
+                        <h3 class="text-sm font-semibold text-gray-800 mb-2 leading-relaxed" style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">${article.title}</h3>
+                        <p class="text-xs text-gray-500"><i class="fa-regular fa-clock mr-1"></i> ${timeString}</p>
+                    </a>
+                `;
+            });
+        }
+    } catch (error) {
+        console.error('Lỗi truy xuất tin tức:', error);
+        document.getElementById('news-container').innerHTML = '<p class="text-sm text-red-500 col-span-3">Tạm thời không thể kết nối đến máy chủ tin tức.</p>';
+    }
+}
+
+// 2. Khởi tạo TradingView Widget
 new TradingView.widget({
   "autosize": true,
   "symbol": "SSI:VNINDEX",
@@ -303,7 +338,7 @@ new TradingView.widget({
   "container_id": "tradingview_chart"
 });
 
-// Chuyển Tab Dữ liệu sống
+// 3. Cơ chế chuyển tab màn hình hiển thị
 function switchLiveTab(tab) {
     document.getElementById('live-content-tradingview').classList.add('hidden');
     document.getElementById('live-content-vietstock').classList.add('hidden');
@@ -324,11 +359,11 @@ function switchLiveTab(tab) {
     }
 }
 
-// Tìm kiếm đa nguồn
+// 4. Tìm kiếm đa kênh
 function triggerSearch(source) {
     const query = document.getElementById('search-input').value.trim();
     if (!query) {
-        alert('Vui lòng nhập từ khoá tìm kiếm!');
+        alert('Vui lòng nhập thuật ngữ cần tra cứu.');
         return;
     }
     let url = '';
@@ -342,10 +377,10 @@ function triggerSearch(source) {
     window.open(url, '_blank');
 }
 
-// Tải giá CoinGecko API
+// 5. Đồng bộ hóa giá trị tiền mã hóa
 let cryptos = [
-    { id: 'bitcoin', code: 'BTC', price: 0, low: 60000, high: 75000, status: 'Đang tải...' },
-    { id: 'ethereum', code: 'ETH', price: 0, low: 3000, high: 4000, status: 'Đang tải...' }
+    { id: 'bitcoin', code: 'BTC', price: 0, status: 'Đang kết nối...' },
+    { id: 'ethereum', code: 'ETH', price: 0, status: 'Đang kết nối...' }
 ];
 
 async function fetchCryptoPrices() {
@@ -356,13 +391,7 @@ async function fetchCryptoPrices() {
         cryptos.forEach(coin => {
             if (data[coin.id]) {
                 coin.price = data[coin.id].usd;
-                if (coin.low && coin.price < coin.low) {
-                    coin.status = 'Cảnh báo: Thấp';
-                } else if (coin.high && coin.price > coin.high) {
-                    coin.status = 'Cảnh báo: Cao';
-                } else {
-                    coin.status = 'Bình thường';
-                }
+                coin.status = 'Bình thường';
             }
         });
         renderCryptoTable();
@@ -376,22 +405,17 @@ function renderCryptoTable() {
     const tbody = document.getElementById('crypto-table-body');
     tbody.innerHTML = '';
     cryptos.forEach((coin) => {
-        let badgeClass = 'status-normal';
-        if (coin.status.includes('Thấp') || coin.status.includes('Cao')) badgeClass = 'status-alert';
-        
         tbody.innerHTML += `
         <tr class="border-b border-gray-100 hover:bg-gray-50">
             <td class="p-2 font-bold">${coin.code}</td>
             <td class="p-2 font-semibold text-blue-600">${coin.price ? '$' + coin.price.toLocaleString() : '--'}</td>
-            <td class="p-2 text-gray-500">${coin.low ? '$' + coin.low.toLocaleString() : '--'}</td>
-            <td class="p-2 text-gray-500">${coin.high ? '$' + coin.high.toLocaleString() : '--'}</td>
-            <td class="p-2"><span class="status-badge ${badgeClass}">${coin.status}</span></td>
+            <td class="p-2"><span class="status-badge status-normal">${coin.status}</span></td>
         </tr>
         `;
     });
 }
 
-// Hệ thống lưu trữ LocalStorage Checklist
+// 6. Quản trị bộ nhớ đệm (LocalStorage) cho Checkbox
 function saveCheckboxes() {
     const checkboxes = document.querySelectorAll('.task-cb');
     const state = Array.from(checkboxes).map(cb => cb.checked);
@@ -409,7 +433,7 @@ document.querySelectorAll('.task-cb').forEach(cb => {
     cb.addEventListener('change', saveCheckboxes);
 });
 
-// Hệ thống Pipeline
+// 7. Định tuyến luồng tiến độ (Pipeline)
 function setPipelineStep(type, step) {
     const selector = type === 'yt' ? '.yt-step' : '.art-step';
     const buttons = document.querySelectorAll(selector);
@@ -429,7 +453,7 @@ function loadPipelines() {
     setPipelineStep('article', parseInt(artStep));
 }
 
-// Chức năng Trợ lý Cô Hương
+// 8. Tích hợp Trợ lý Cá nhân và Đồng bộ Google Sheets
 let todos = JSON.parse(localStorage.getItem('huong_todos')) || [];
 
 function saveTodos() {
@@ -444,6 +468,20 @@ function addTodo() {
         todos.push({ text: text, done: false, id: Date.now() });
         input.value = '';
         saveTodos();
+
+        const webAppUrl = "https://script.google.com/macros/s/AKfycbx0aw_X8sf2LfJKbZ3TIT62KkYnRkwzESN03xawbPp1oQKUWIjXGPWYh7Q7D535dZE/exec";
+        fetch(webAppUrl, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: {
+                'Content-Type': 'text/plain;charset=utf-8',
+            },
+            body: JSON.stringify({
+                type: "Trợ lý cô Hương",
+                content: text,
+                status: "Vừa thêm mới"
+            })
+        }).catch(error => console.error('Lỗi đồng bộ:', error));
     }
 }
 
@@ -501,14 +539,21 @@ function updateTimestamp() {
     document.getElementById('last-updated-time').innerText = now.toLocaleString('vi-VN');
 }
 
-// Khởi chạy hệ thống khi vào web
+function refreshAllData() {
+    fetchCryptoPrices();
+    fetchNews();
+}
+
+// 9. Thực thi chuỗi lệnh khi hoàn tất khởi tạo trang
 window.onload = function() {
     loadCheckboxes();
     loadPipelines();
     renderTodos();
     loadNotes();
     fetchCryptoPrices();
+    fetchNews();
     setInterval(fetchCryptoPrices, 60000); 
+    setInterval(fetchNews, 300000); // Tự động làm mới tin tức mỗi 5 phút
 };
 </script>
 </body>
