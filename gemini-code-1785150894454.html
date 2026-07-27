@@ -463,12 +463,27 @@ function saveTodos() {
 }
 
 function addTodo() {
+    function addTodo() {
     const input = document.getElementById('new-todo');
     const text = input.value.trim();
     if (text) {
+        // 1. Lưu vào trình duyệt như cũ
         todos.push({ text: text, done: false, id: Date.now() });
         input.value = '';
         saveTodos();
+
+        // 2. Đồng bộ lên Google Sheets
+        const webAppUrl = "DÁN_LINK_WEB_APP_CỦA_THẦY_VÀO_ĐÂY";
+        fetch(webAppUrl, {
+            method: 'POST',
+            body: JSON.stringify({
+                type: "Trợ lý cô Hương",
+                content: text,
+                status: "Vừa thêm mới"
+            })
+        }).catch(error => console.error('Lỗi đồng bộ:', error));
+    }
+}
     }
 }
 
