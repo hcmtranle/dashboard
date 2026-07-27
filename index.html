@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>tranle-hcm-dashboard</title>
+<title>Dashboard Công Việc</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <link href="https://fonts.googleapis.com/css?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -138,13 +138,13 @@ body { font-family: 'Inter', sans-serif; background-color: #f3f4f6; color: #1f29
 </section>
 </div>
 
-<!-- CẢNH BÁO CHỨNG KHOÁN (ĐỒNG BỘ GOOGLE SHEETS) -->
+<!-- CẢNH BÁO CHỨNG KHOÁN -->
 <section class="card p-5 mb-6">
 <div class="flex justify-between items-center mb-2">
 <h2 class="text-base font-semibold text-gray-800 flex items-center gap-2"><i class="fa-solid fa-chart-line text-emerald-600"></i> Cảnh báo chứng khoán</h2>
-<span id="sheet-status" class="text-xs bg-emerald-50 text-emerald-700 px-3 py-1 rounded border border-emerald-200">Đã đồng bộ Google Sheets</span>
+<span class="text-xs bg-gray-100 text-gray-600 px-3 py-1 rounded">Danh mục theo dõi</span>
 </div>
-<p class="text-xs text-gray-500 mb-3">Danh mục theo dõi cập nhật trực tiếp từ Google Sheets của Thầy.</p>
+<p class="text-xs text-gray-500 mb-3">Theo dõi nhanh các mã cổ phiếu tiêu biểu.</p>
 <div class="overflow-x-auto">
 <table class="w-full text-left border-collapse text-xs">
 <thead>
@@ -156,8 +156,10 @@ body { font-family: 'Inter', sans-serif; background-color: #f3f4f6; color: #1f29
 <th class="p-2 font-medium">TRẠNG THÁI</th>
 </tr>
 </thead>
-<tbody id="stock-table-body">
-<tr><td colspan="5" class="p-3 text-center text-gray-400">Đang đồng bộ dữ liệu từ Google Sheets...</td></tr>
+<tbody>
+<tr class="border-b border-gray-100 hover:bg-gray-50"><td class="p-2 font-bold">VNM</td><td class="p-2 font-semibold text-blue-600">68.5</td><td class="p-2 text-gray-500">65</td><td class="p-2 text-gray-500">72</td><td class="p-2"><span class="status-badge status-normal">Bình thường</span></td></tr>
+<tr class="border-b border-gray-100 hover:bg-gray-50"><td class="p-2 font-bold">VCB</td><td class="p-2 font-semibold text-blue-600">57.0</td><td class="p-2 text-gray-500">55</td><td class="p-2 text-gray-500">62</td><td class="p-2"><span class="status-badge status-normal">Bình thường</span></td></tr>
+<tr class="border-b border-gray-100 hover:bg-gray-50"><td class="p-2 font-bold">FPT</td><td class="p-2 font-semibold text-blue-600">128.0</td><td class="p-2 text-gray-500">120</td><td class="p-2 text-gray-500">135</td><td class="p-2"><span class="status-badge status-normal">Bình thường</span></td></tr>
 </tbody>
 </table>
 </div>
@@ -183,37 +185,6 @@ body { font-family: 'Inter', sans-serif; background-color: #f3f4f6; color: #1f29
 </section>
 
 <script>
-const webAppUrl = "https://script.google.com/macros/s/AKfycbx0aw_X8sf2LfJKbZ3TIT62KkYnRkwzESN03xawbPp1oQKUWIjXGPWYh7Q7D535dZE/exec";
-
-// 1. Đồng bộ dữ liệu chứng khoán từ Google Sheets
-async function fetchStockDataFromSheets() {
-    try {
-        const response = await fetch(webAppUrl);
-        const rows = await response.json();
-        const tbody = document.getElementById('stock-table-body');
-        if (rows && rows.length > 1) {
-            tbody.innerHTML = '';
-            // Bỏ qua hàng tiêu đề đầu tiên, lấy từ hàng thứ 2
-            for (let i = 1; i < rows.length; i++) {
-                let r = rows[i];
-                if(r[0]) { // Kiểm tra có mã chứng khoán
-                    tbody.innerHTML += `
-                    <tr class="border-b border-gray-100 hover:bg-gray-50">
-                        <td class="p-2 font-bold">${r[0]}</td>
-                        <td class="p-2 font-semibold text-blue-600">${r[1]}</td>
-                        <td class="p-2 text-gray-500">${r[2]}</td>
-                        <td class="p-2 text-gray-500">${r[3]}</td>
-                        <td class="p-2"><span class="status-badge status-normal">${r[4] || 'Bình thường'}</span></td>
-                    </tr>`;
-                }
-            }
-        }
-    } catch(e) {
-        console.error("Lỗi tải chứng khoán từ Sheets:", e);
-    }
-}
-
-// 2. Gửi task mới qua Google Sheets bằng hình thức ẩn (tránh lỗi CORS)
 function addTodo() {
     const input = document.getElementById('new-todo');
     const text = input.value.trim();
@@ -221,23 +192,9 @@ function addTodo() {
         todos.push({ text: text, done: false, id: Date.now() });
         input.value = '';
         saveTodos();
-
-        // Gửi ngầm qua dạng form để không bị chặn CORS
-        const formData = new FormData();
-        formData.append("action", "addTodo");
-        formData.append("type", "Trợ lý cô Hương");
-        formData.append("content", text);
-        formData.append("status", "Vừa thêm mới");
-
-        fetch(webAppUrl, {
-            method: 'POST',
-            mode: 'no-cors',
-            body: formData
-        }).catch(err => console.log('Đã gửi đồng bộ ngầm'));
     }
 }
 
-// 3. Quản lý Trợ lý cô Hương (LocalStorage)
 let todos = JSON.parse(localStorage.getItem('huong_todos')) || [];
 function saveTodos() {
     localStorage.setItem('huong_todos', JSON.stringify(todos));
@@ -276,7 +233,6 @@ function loadNotes() {
     if (notes) document.getElementById('personal-notes').value = notes;
 }
 
-// 4. Giá Coin Live
 let cryptos = [{ id: 'bitcoin', code: 'BTC', price: 0, status: 'Đang tải...' }, { id: 'ethereum', code: 'ETH', price: 0, status: 'Đang tải...' }];
 async function fetchCryptoPrices() {
     try {
@@ -298,8 +254,21 @@ async function fetchCryptoPrices() {
     } catch(e) {}
 }
 
+function triggerSearch(source) {
+    const query = document.getElementById('search-input').value.trim();
+    if (!query) { alert('Vui lòng nhập từ khoá!'); return; }
+    let url = '';
+    switch(source) {
+        case 'google': url = `https://www.google.com/search?q=${encodeURIComponent(query)}`; break;
+        case 'youtube': url = `https://www.youtube.com/results?search_query=${encodeURIComponent(query)}`; break;
+        case 'gnews': url = `https://news.google.com/search?q=${encodeURIComponent(query)}`; break;
+        case 'cafef': url = `https://cafef.vn/tim-kiem.chn?keywords=${encodeURIComponent(query)}`; break;
+        case 'coingecko': url = `https://www.coingecko.com/en/search_redirect?id=${encodeURIComponent(query)}`; break;
+    }
+    window.open(url, '_blank');
+}
+
 function refreshAllData() {
-    fetchStockDataFromSheets();
     fetchCryptoPrices();
     document.getElementById('last-updated-time').innerText = new Date().toLocaleTimeString('vi-VN');
 }
@@ -307,7 +276,6 @@ function refreshAllData() {
 window.onload = function() {
     loadNotes();
     renderTodos();
-    fetchStockDataFromSheets();
     fetchCryptoPrices();
     setInterval(refreshAllData, 60000);
 };
